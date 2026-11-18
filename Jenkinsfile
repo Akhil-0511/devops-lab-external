@@ -6,42 +6,42 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                echo 'Starting DevOps Project'
+                echo 'GitHub checkout successful!'
             }
         }
 
         stage('Docker Build') {
             steps {
-                sh 'docker compose build'
+                bat 'docker compose build'
             }
         }
 
         stage('Start Containers') {
             steps {
-                sh 'docker compose up -d'
-                sh 'sleep 15'
+                bat 'docker compose up -d'
+                bat 'powershell -NoProfile -Command "Start-Sleep -Seconds 20"'
             }
         }
 
         stage('Selenium Testing') {
             steps {
-                sh 'pip install -r requirements.txt'
-                sh 'pytest -v tests/'
+                bat 'py -m pip install -r requirements.txt'
+                bat 'py -m pytest -v tests/'
             }
         }
     }
 
     post {
         always {
-            sh 'docker compose down'
+            bat(returnStatus: true, script: 'docker compose down')
         }
 
         success {
-            echo 'All tests passed successfully!'
+            echo 'SUCCESS: Docker and Selenium tests completed!'
         }
 
         failure {
-            echo 'Build or testing failed!'
+            echo 'FAILED: Check Console Output for errors.'
         }
     }
 }
