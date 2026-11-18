@@ -29,6 +29,14 @@ pipeline {
                 bat 'py -m pytest -v tests/'
             }
         }
+        stage('Check Docker') {
+    steps {
+        bat 'where docker'
+        bat 'docker --version'
+        bat 'docker compose version'
+        bat 'docker version'
+    }
+}
     }
 
     post {
